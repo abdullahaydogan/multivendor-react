@@ -1,86 +1,75 @@
 import React from "react";
-import { Box, Typography, Grid, IconButton } from "@mui/material";
-import { Facebook, Twitter, Instagram, LinkedIn } from "@mui/icons-material";
-import { Link } from 'react-router-dom';  
+import {
+  Box,
+  Typography,
+  Grid,
+  IconButton
+} from "@mui/material";
+import {
+  Facebook,
+  Twitter,
+  Instagram,
+  LinkedIn
+} from "@mui/icons-material";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
     <Box
-    sx={{
-      backgroundColor: "#2C3E50",
-      color: "white",
-      padding: "40px 20px",
-      width: "100%", 
-      boxSizing: "border-box",
-       marginTop: "100px"
-    }}
-    
+      component="footer"
+      sx={{
+        backgroundColor: "#1a1d2e",
+        color: "white",
+        py: 6,
+        px: 2,
+        mt: 10,
+      }}
     >
       <Grid container spacing={4} justifyContent="center">
-        {/* Footer Sol Kısmı */}
+        {/* Sol */}
         <Grid item xs={12} sm={6} md={3}>
-          <Typography variant="h6" sx={{ marginBottom: "20px" }}>
+          <Typography variant="h6" gutterBottom>
             Hızlı Bağlantılar
           </Typography>
           <Box>
-            <Link to="/" style={linkStyle}>Home</Link>
-            <Link to="/about" style={linkStyle}>About Us</Link>
-            <Link to="/services" style={linkStyle}>Services</Link>
-            <Link to="/contact" style={linkStyle}>Contact Us</Link>
+            {["/", "/about", "/services", "/contact"].map((path, index) => (
+              <Link to={path} key={index} style={linkStyle}>
+                {linkLabels[index]}
+              </Link>
+            ))}
           </Box>
         </Grid>
 
-        {/* Footer Orta Kısmı */}
+        {/* Orta */}
         <Grid item xs={12} sm={6} md={3}>
-          <Typography variant="h6" sx={{ marginBottom: "20px" }}>
-            Follow Us
+          <Typography variant="h6" gutterBottom>
+            Bizi Takip Edin
           </Typography>
           <Box>
-            <IconButton
-              color="inherit"
-              href="https://facebook.com"
-              target="_blank"
-              sx={socialIconStyle}
-            >
-              <Facebook />
-            </IconButton>
-            <IconButton
-              color="inherit"
-              href="https://twitter.com"
-              target="_blank"
-              sx={socialIconStyle}
-            >
-              <Twitter />
-            </IconButton>
-            <IconButton
-              color="inherit"
-              href="https://instagram.com"
-              target="_blank"
-              sx={socialIconStyle}
-            >
-              <Instagram />
-            </IconButton>
-            <IconButton
-              color="inherit"
-              href="https://linkedin.com"
-              target="_blank"
-              sx={socialIconStyle}
-            >
-              <LinkedIn />
-            </IconButton>
+            {socialLinks.map((social, i) => (
+              <IconButton
+                key={i}
+                color="inherit"
+                href={social.href}
+                target="_blank"
+                sx={socialIconStyle}
+              >
+                {social.icon}
+              </IconButton>
+            ))}
           </Box>
         </Grid>
 
-        {/* Footer Sağ Kısmı */}
+        {/* Sağ */}
         <Grid item xs={12} sm={6} md={3}>
-          <Typography variant="h6" sx={{ marginBottom: "20px" }}>
+          <Typography variant="h6" gutterBottom>
             İletişim
           </Typography>
           <Box>
-            <Typography variant="body2" sx={{ marginBottom: "10px" }}>
+            <Typography variant="body2" sx={{ mb: 1 }}>
               <strong>Email:</strong> contact@example.com
             </Typography>
-            <Typography variant="body2" sx={{ marginBottom: "10px" }}>
+            <Typography variant="body2" sx={{ mb: 1 }}>
               <strong>Phone:</strong> +1 234 567 890
             </Typography>
             <Typography variant="body2">
@@ -88,33 +77,49 @@ const Footer = () => {
             </Typography>
           </Box>
         </Grid>
-
-        {/* Footer Alt Kısmı */}
-        <Grid item xs={12}>
-          <Typography variant="body2" align="center" sx={{ marginTop: "20px" }}>
-            &copy; {new Date().getFullYear()} KOU Bazaar. All Rights Reserved.
-          </Typography>
-        </Grid>
       </Grid>
+
+      {/* Alt */}
+      <Box sx={{ mt: 4 }}>
+        <Typography
+          variant="body2"
+          align="center"
+          sx={{ color: "#aaa" }}
+        >
+          &copy; {new Date().getFullYear()} KOU Bazaar. All Rights Reserved.
+        </Typography>
+      </Box>
     </Box>
   );
 };
 
-const socialIconStyle = {
-  marginRight: "10px",
-  '&:hover': {
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
-  },
-};
+const linkLabels = ["Home", "About Us", "Services", "Contact Us"];
 
-// Define linkStyle
+const socialLinks = [
+  { icon: <Facebook />, href: "https://facebook.com" },
+  { icon: <Twitter />, href: "https://twitter.com" },
+  { icon: <Instagram />, href: "https://instagram.com" },
+  { icon: <LinkedIn />, href: "https://linkedin.com" },
+];
+
 const linkStyle = {
   color: "white",
   textDecoration: "none",
-  display: "block", // To make each link take up full width
-  marginBottom: "10px", // Space between links
-  '&:hover': {
-    color: "#1a73e8", // Change color on hover
+  display: "block",
+  marginBottom: "8px",
+  fontSize: "0.9rem",
+  transition: "color 0.3s",
+  ":hover": {
+    color: "#1a73e8",
+  },
+};
+
+const socialIconStyle = {
+  color: "#fff",
+  mr: 1,
+  transition: "background 0.3s",
+  "&:hover": {
+    backgroundColor: "rgba(255,255,255,0.1)",
   },
 };
 

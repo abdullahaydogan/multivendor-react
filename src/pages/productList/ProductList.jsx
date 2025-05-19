@@ -11,6 +11,7 @@ import {
   Alert,
   IconButton,
   Snackbar,
+  Box,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SearchBar from "../../component/serchbar/SearchBar";
@@ -18,34 +19,20 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 const StyledCard = styled(Card)(({ theme }) => ({
-  transition: "transform 0.3s, box-shadow 0.3s",
-  maxWidth: 220,
-  margin: "0 auto",
-  position: "relative",
+  borderRadius: 12,
+  boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+  transition: "transform 0.2s ease-in-out",
   "&:hover": {
-    transform: "scale(1.03)",
-    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)",
+    transform: "scale(1.02)",
   },
 }));
 
-const IconButtonStyled = styled(IconButton)(({ theme }) => ({
-  position: "absolute",
-  top: "8px",
-  right: "8px",
-  transition: "all 0.3s ease-in-out",
-  "&:hover": {
-    backgroundColor: "rgba(0, 0, 0, 0.1)",
-    color: theme.palette.primary.main,
-  },
-}));
-
-const FavoriteIconStyled = styled(FavoriteIcon)(({ theme }) => ({
-  transition: "all 0.3s ease-in-out",
-  color: "#757575",
-  "&:hover": {
-    color: "red",
-  },
-}));
+const IconBox = styled(Box)({
+  display: "flex",
+  justifyContent: "flex-end",
+  gap: 8,
+  padding: "8px 8px 0 8px",
+});
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -57,7 +44,6 @@ const ProductList = () => {
   const [favorites, setFavorites] = useState([]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -77,12 +63,8 @@ const ProductList = () => {
 
   useEffect(() => {
     const filtered = products.filter((product) => {
-      const matchesQuery = product.name
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
-      const matchesCategory =
-        selectedCategory === "" || product.category === selectedCategory;
-
+      const matchesQuery = product.name.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesCategory = selectedCategory === "" || product.category === selectedCategory;
       return matchesQuery && matchesCategory;
     });
 
@@ -98,24 +80,21 @@ const ProductList = () => {
     const newFavorites = [...favorites, product];
     setFavorites(newFavorites);
     localStorage.setItem("favorites", JSON.stringify(newFavorites));
-    setSnackbarMessage(`"${product.name}" favorilerinize eklendi!`);
+    setSnackbarMessage(`"${product.name}" favorilere eklendi!`);
     setOpenSnackbar(true);
   };
 
   const handleAddToCart = (product) => {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    const alreadyInCart = storedCart.some(item => item.id === product.id);
 
-    const isProductInCart = storedCart.some(item => item.id === product.id);
-
-    if (isProductInCart) {
-      alert("Bu ürün zaten sepetinizde.");
+    if (alreadyInCart) {
+      alert("Bu ürün zaten sepette.");
       return;
     }
 
     const updatedCart = [...storedCart, product];
-
     localStorage.setItem("cart", JSON.stringify(updatedCart));
-
     setSnackbarMessage(`"${product.name}" sepete eklendi!`);
     setOpenSnackbar(true);
   };
@@ -124,76 +103,52 @@ const ProductList = () => {
   if (error) return <Alert severity="error">Error: {error}</Alert>;
 
   return (
-    <div style={{ padding: "16px", backgroundColor: "#f9f9f9" }}>
-         <SearchBar
+    <Box sx={{ backgroundColor: "#f9f9f9", p: 2 }}>
+      <SearchBar
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         setSelectedCategory={setSelectedCategory}
       />
-      <Grid container spacing={2} alignItems="stretch">
+
+      <Grid container spacing={3}>
         {filteredProducts.map((product) => (
-          <Grid
-            item
-            xs={12}
-            sm={2} // Her satırda 6 ürün olacak şekilde düzenlendi
-            md={2}
-            key={product.id}
-            style={{ flexBasis: "16.666%" }}
-            mb={4}
-          >
+          <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
             <StyledCard>
-              {product.photo && (
-                <CardMedia
-                  component="img"
-                  image={`data:image/jpeg;base64,${product.photo}`}
-                  alt={product.name}
-                  sx={{
-                    width: "100%",
-                    height: "250px",
-                    borderRadius: "8px",
-                    objectFit: "contain",
-                    backgroundColor: "white",
-                  }}
-                />
-              )}
+              <IconBox>
+                <IconButton onClick={() => handleAddToFavorites(product)}>
+                  <FavoriteIcon />
+                </IconButton>
+                <IconButton onClick={() => handleAddToCart(product)}>
+                  <ShoppingCartIcon />
+                </IconButton>
+              </IconBox>
+              <CardMedia
+                component="img"
+                image={`data:image/jpeg;base64,${product.photo}`}
+                alt={product.name}
+                sx={{
+                  height: 220,
+                  objectFit: "contain",
+                  backgroundColor: "#fff",
+                  p: 1,
+                }}
+              />
               <CardContent>
                 <Link to={`/product/${product.id}`} style={{ textDecoration: "none" }}>
-                  <Typography variant="h6" component="div" color="primary">
+                  <Typography variant="h6" sx={{ fontWeight: "bold", color: "#3f51b5" }}>
                     {product.name}
                   </Typography>
                 </Link>
                 <Typography variant="body2" color="text.secondary">
                   <strong>Stock:</strong> {product.stock}
                 </Typography>
-                <Typography
-                  variant="body2"
-                  color="primary"
-                  sx={{ fontWeight: "bold", fontSize: "1em" }}
-                >
-                  Price:{" "}
-                  <span style={{ color: "#28a745" }}>
-                    ${product.price.toFixed(2)}
-                  </span>
+                <Typography variant="body2" sx={{ color: "#28a745", fontWeight: "bold" }}>
+                  ${product.price.toFixed(2)}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   <strong>Category:</strong> {product.category}
                 </Typography>
               </CardContent>
-              <IconButtonStyled
-                onClick={() => handleAddToCart(product)}
-                aria-label="add to cart"
-              >
-                <ShoppingCartIcon />
-              </IconButtonStyled>
-              <IconButtonStyled
-                style={{
-                  right: "40px",
-                }}
-                onClick={() => handleAddToFavorites(product)}
-                aria-label="add to favorites"
-              >
-                <FavoriteIconStyled />
-              </IconButtonStyled>
             </StyledCard>
           </Grid>
         ))}
@@ -205,7 +160,7 @@ const ProductList = () => {
         onClose={() => setOpenSnackbar(false)}
         message={snackbarMessage}
       />
-    </div>
+    </Box>
   );
 };
 

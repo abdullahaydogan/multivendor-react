@@ -1,172 +1,117 @@
-import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
+import React, { useState } from "react";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton,
+  Avatar,
+  Box,
+  Menu,
+  MenuItem,
+  Tooltip,
+  Badge,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
-import { useNavigate } from "react-router-dom"; 
+import SettingsIcon from "@mui/icons-material/Settings";
+import TranslateIcon from "@mui/icons-material/Translate";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { useNavigate } from "react-router-dom";
+import { getUserInfo } from "../../utils/authService";
+import logo from "../../assets/projeLogo2.png";
 
-const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Logout", "Login", "Profile"];
+const Navbar = () => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [langAnchorEl, setLangAnchorEl] = useState(null);
+  const navigate = useNavigate();
+  const user = getUserInfo();
 
-function Navbar() {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const navigate = useNavigate(); 
+  const cartCount = JSON.parse(localStorage.getItem("cart"))?.length || 0;
+  const isLoggedIn = Boolean(user);
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
-  const handleLoginRedirect = () => {
-    //    navigate to '/logIn' page
-    navigate("/logIn");
-    handleCloseUserMenu(); // closed Menu  
-  };
-
-  const handleProfileRedirect = () => {
-    //  navigate to '/'
-    navigate("/profile");
-    handleCloseUserMenu(); // closed Menu  
-  };
-
-  const handleAccountRedirect = () => {
-    //  sayfasına navigate to '/account'
-    navigate("/account");
-    handleCloseUserMenu(); // closed Menu  
-  };
-
-  const handleDashboardRedirect = () => {
-    //  sayfasına navigate to '/dashboard'
-    navigate("/dashboard");
-    handleCloseUserMenu(); // closed Menu  
-  };
+  const handleMenuClick = (event) => setAnchorEl(event.currentTarget);
+  const handleMenuClose = () => setAnchorEl(null);
+  const handleLangClick = (event) => setLangAnchorEl(event.currentTarget);
+  const handleLangClose = () => setLangAnchorEl(null);
 
   const handleLogout = () => {
-    alert("Logged out");
-    handleCloseUserMenu(); // Menu closed 
-    // Remove the JWT token from local storage or cookies
-    localStorage.removeItem("authToken"); // or cookies.remove("authToken");
-    // Redirect the user to the login page
+    localStorage.removeItem("authToken");
     navigate("/logIn");
-    // Close the menu
-    handleCloseUserMenu();
+    handleMenuClose();
+  };
+
+  const handleLanguageChange = (langCode) => {
+    alert(`Language switched to ${langCode.toUpperCase()}`);
+    handleLangClose();
   };
 
   return (
-    <AppBar position="static" sx={{ bgcolor: "#ffff" }}>
-      <Container maxWidth="xl">
-        <Toolbar disableGutters sx={{ justifyContent: "flex-end" }}>
-          <Box
-            sx={{
-              flexGrow: 1,
-              display: { xs: "flex", md: "none" },
-              justifyContent: "flex-end",
-            }}
-          >
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
+    <AppBar
+      position="fixed"
+      sx={{
+        backgroundColor: "#fff",
+        color: "#333",
+        boxShadow: 1,
+        left: "240px", // sidebar genişliği kadar sağdan başlasın
+        width: "calc(100% - 240px)", // sidebar dışında kalan kısmı kapsasın
+      }}
+    >
+      <Toolbar sx={{ justifyContent: "space-between", flexWrap: "wrap" }}>
+        {" "}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <img src={logo} alt="logo" height="35" />
+          <Typography variant="h6" sx={{ fontWeight: "bold", ml: 1 }}>
+            KOU Bazaar
+          </Typography>
+        </Box>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <IconButton onClick={() => navigate("/cartpage")}>
+            <Badge badgeContent={cartCount} color="primary">
+              <ShoppingCartIcon />
+            </Badge>
+          </IconButton>
+          <Tooltip title="Language">
+            <IconButton onClick={handleLangClick}>
+              <TranslateIcon />
             </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{ display: { xs: "block", md: "none" } }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: "center", color: "black" }}>
-                    {page}
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+          </Tooltip>
 
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Abdullah" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem
-                  key={setting}
-                  onClick={
-                    setting === "Login"
-                      ? handleLoginRedirect
-                      : setting === "Profile"
-                      ? handleProfileRedirect
-                      : setting === "Account"
-                      ? handleAccountRedirect
-                      : setting === "Dashboard"
-                      ? handleDashboardRedirect
-                      : setting === "Logout"
-                      ? handleLogout
-                      : handleCloseUserMenu
-                  }
-                >
-                  <Typography sx={{ textAlign: "center", color: "black" }}>
-                    {setting}
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-        </Toolbar>
-      </Container>
+          <Menu
+            anchorEl={langAnchorEl}
+            open={Boolean(langAnchorEl)}
+            onClose={handleLangClose}
+          >
+            <MenuItem onClick={() => handleLanguageChange("en")}>
+              🇬🇧 English
+            </MenuItem>
+            <MenuItem onClick={() => handleLanguageChange("tr")}>
+              🇹🇷 Türkçe
+            </MenuItem>
+          </Menu>
+
+          <IconButton>
+            <SettingsIcon />
+          </IconButton>
+          <Typography>{user?.username || "Guest"}</Typography>
+          <Tooltip title="Account">
+            <IconButton onClick={handleMenuClick}>
+              <Avatar>{user?.username?.[0]?.toUpperCase() || "A"}</Avatar>
+            </IconButton>
+          </Tooltip>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+          >
+            {isLoggedIn ? (
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            ) : (
+              <MenuItem onClick={() => navigate("/logIn")}>Login</MenuItem>
+            )}
+          </Menu>
+        </Box>
+      </Toolbar>
     </AppBar>
   );
-}
+};
 
 export default Navbar;

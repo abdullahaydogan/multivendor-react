@@ -13,6 +13,7 @@ import ProductCreate from "./pages/ProductCreate/ProductCreate";
 import ChatAi from "./pages/ai/ChatAi";
 import NotFoundPage from "./component/404/NotFoundPage";
 import Navbar from "./component/navbar/Navbar"; 
+import Profile from "./pages/profile/Profile";
 
 function App() {
   return (
@@ -31,6 +32,8 @@ function App() {
             <Route path="/favorites" exact element={<Favorites />} />
             <Route path="/productCreate" exact element={<ProductCreate />} />
             <Route path="/ai" exact element={<ChatAi />} />
+            <Route path="/profile" exact element={<Profile />} />
+
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <Footer />

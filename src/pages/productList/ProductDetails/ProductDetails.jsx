@@ -85,19 +85,6 @@ const ProductDetail = () => {
             <strong>Category:</strong> {product.category}
           </Typography>
         </CardContent>
-        <div style={{ padding: "16px" }}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleUpdate}
-            sx={{ mr: 2 }}
-          >
-            Update
-          </Button>
-          <Button variant="outlined" color="secondary" onClick={handleDelete}>
-            Delete
-          </Button>
-        </div>
       </Card>
     </Container>
   );

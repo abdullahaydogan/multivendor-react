@@ -1,181 +1,97 @@
-import React, { useState, useEffect, useRef } from "react";
+// src/components/Sidebar.jsx
+import React from "react";
 import {
   Drawer,
   List,
   ListItem,
+  ListItemIcon,
   ListItemText,
   Divider,
-  IconButton,
+  Typography,
   Box,
-  ListItemIcon,
   Tooltip,
 } from "@mui/material";
-import {
-  Menu as MenuIcon,
-  Home,
-  AddBox,
-  Inventory,
-  Favorite,
-  ShoppingCart,
-  People,
-  ContactMail,
-  Help,
-} from "@mui/icons-material";
-import { styled } from "@mui/system";
+import HomeIcon from "@mui/icons-material/Home";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import InventoryIcon from "@mui/icons-material/Inventory";
+import ContactMailIcon from "@mui/icons-material/ContactMail";
+import HelpIcon from "@mui/icons-material/Help";
 import { useNavigate } from "react-router-dom";
-import Logo from "../../assets/projeLogo1.png";
-import SmallLogo from "../../assets/projeLogo1.png";
+import Logo from "../../assets/logo3.png";
+import { Shop } from "@mui/icons-material";
 
-const CustomDrawer = styled(Drawer)(({ theme }) => ({
-  "& .MuiDrawer-paper": {
-    backgroundColor: "#2C3E50",
-    color: "white",
-    width: "300px",
-    paddingTop: "20px",
-    transition: "width 0.3s",
-  },
-}));
+const drawerWidth = 240;
 
 const Sidebar = () => {
-  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const sidebarRef = useRef(null); 
-  const buttonRef = useRef(null); 
 
-  const toggleSidebar = () => {
-    setOpen(!open);
-    console.log("Sidebar toggled, open:", !open);
-  };
+  const menuSections = [
+    {
+      title: "SHOP",
+      items: [
+        { text: "Home", icon: <HomeIcon />, path: "/" },
 
-  const handleNavigation = (path) => {
-    navigate(path);
-  };
-
-  const menuItems = [
-    { text: "Home", icon: <Home sx={{ color: "white" }} />, path: "/" },
-    {
-      text: "Add Products",
-      icon: <AddBox sx={{ color: "white" }} />,
-      path: "/productCreate",
+        { text: "My Products", icon: <InventoryIcon />, path: "/productList" },
+        { text: "Cart", icon: <Shop />, path: "/cartpage" },
+        { text: "Favorites", icon: <FavoriteIcon />, path: "/favorites" },
+        { text: "Contact", icon: <ContactMailIcon />, path: "/contact" },
+        { text: "Add Products", icon: <AddBoxIcon />, path: "/productCreate" },
+      ],
     },
     {
-      text: "My Products",
-      icon: <Inventory sx={{ color: "white" }} />,
-      path: "/productList",
-    },
-    {
-      text: "Favorites",
-      icon: <Favorite sx={{ color: "white" }} />,
-      path: "/favorites",
-    },
-    {
-      text: "Cart",
-      icon: <ShoppingCart sx={{ color: "white" }} />,
-      path: "/cartpage",
-    },
-    {
-      text: "Contact Us",
-      icon: <ContactMail sx={{ color: "white" }} />,
-      path: "/contact",
-    },
-    {
-      text: "Ask AI",
-      icon: <Help sx={{ color: "white" }} />, // Burada Help ikonu kullanılıyor.
-      path: "/ai",
+      title: "HELP CENTER",
+      items: [{ text: "Ask AI", icon: <HelpIcon />, path: "/ai" }],
     },
   ];
 
-  // Dışarıdaki tıklamaları dinleyip sidebar'ı kapatma işlemi
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        sidebarRef.current &&
-        !sidebarRef.current.contains(event.target) &&
-        buttonRef.current &&
-        !buttonRef.current.contains(event.target)
-      ) {
-        setOpen(false); // Sidebar'ı kapat
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
   return (
-    <>
-     <IconButton
-  onClick={toggleSidebar}
-  ref={buttonRef} // IconButton referansı
+<Drawer
+  variant="permanent"
   sx={{
-    color: "black",
-    position: "fixed",
-    top: "20px",
-    left: open ? "300px" : "70px",
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
-  
-    "&:hover": { backgroundColor: "rgba(255, 255, 255, 1)" },
-    transition: "left 0.3s",
+    width: 240,
+    flexShrink: 0,
+    [`& .MuiDrawer-paper`]: {
+      width: 240,
+      boxSizing: "border-box",
+      backgroundColor: "#1a1d2e",
+      color: "white",
+    },
   }}
 >
-  <MenuIcon />
-</IconButton>
 
 
-      <CustomDrawer
-        ref={sidebarRef} // Sidebar referansı
-        variant="permanent"
-        open={open}
-        sx={{
-          "& .MuiDrawer-paper": {
-            width: open ? "300px" : "70px",
-            transition: "width 0.3s",
-            overflowX: "hidden",
-          },
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            padding: "20px",
-            cursor: "pointer",
-          }}
-          onClick={() => handleNavigation("/")}
-        >
-          {open ? (
-            <img
-              src={Logo}
-              alt="Logo"
-              style={{ width: "260px", height: "auto" }}
-            />
-          ) : (
-            <img
-              src={SmallLogo}
-              alt="Logo"
-              style={{ width: "80px", height: "auto" }}
-            />
-          )}
-        </Box>
+      {/* ✅ Yeni logo alanı */}
+      <Box sx={{ p: 2, display: "flex", justifyContent: "center" }}>
+        <img
+          src={Logo}
+          alt="KOU Bazaar Logo"
+          style={{ width: "180px", height: "auto" }}
+        />
+      </Box>
 
-        <List>
-          {menuItems.map((item, index) => (
-            <React.Fragment key={index}>
-              <Tooltip title={open ? "" : item.text} placement="right">
-                <ListItem button onClick={() => handleNavigation(item.path)}>
-                  <ListItemIcon>{item.icon}</ListItemIcon>
-                  {open && <ListItemText primary={item.text} />}
+      {/* Menü bölümleri */}
+      {menuSections.map((section, idx) => (
+        <Box key={idx}>
+          <Typography variant="subtitle2" sx={{ pl: 2, pt: 1, color: "#888" }}>
+            {section.title}
+          </Typography>
+          <List>
+            {section.items.map((item) => (
+              <Tooltip title={item.text} placement="right" key={item.text}>
+                <ListItem button onClick={() => navigate(item.path)}>
+                  <ListItemIcon sx={{ color: "white" }}>
+                    {item.icon}
+                  </ListItemIcon>
+                  <ListItemText primary={item.text} />
                 </ListItem>
               </Tooltip>
-              <Divider />
-            </React.Fragment>
-          ))}
-        </List>
-      </CustomDrawer>
-    </>
+            ))}
+          </List>
+          <Divider sx={{ bgcolor: "#444" }} />
+        </Box>
+      ))}
+    </Drawer>
   );
 };
 
