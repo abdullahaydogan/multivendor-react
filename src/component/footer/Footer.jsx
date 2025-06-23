@@ -1,23 +1,31 @@
+// src/component/footer/Footer.jsx
 import React from "react";
-import {
-  Box,
-  Typography,
-  Grid,
-  IconButton
-} from "@mui/material";
-import {
-  Facebook,
-  Twitter,
-  Instagram,
-  LinkedIn
-} from "@mui/icons-material";
+import { Box, Typography, Grid, IconButton } from "@mui/material";
+import { Facebook, Twitter, Instagram, LinkedIn } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 
+const drawerWidth = 300;
+
 const Footer = () => {
+  const navLinks = [
+    { label: "Home",      to: "/" },
+    { label: "About Us",  to: "/aboutUs" },
+    { label: "Contact Us",to: "/contactUs" },
+    { label: "Ask AI", to: "/ai" }
+  ];
+
+  const socialLinks = [
+    { icon: <Facebook />, href: "https://facebook.com" },
+    { icon: <Twitter />,  href: "https://twitter.com" },
+    { icon: <Instagram />,href: "https://instagram.com" },
+    { icon: <LinkedIn />, href: "https://linkedin.com" },
+  ];
+
   return (
     <Box
       component="footer"
       sx={{
+        ml: `${drawerWidth}px`,
         backgroundColor: "#1a1d2e",
         color: "white",
         py: 6,
@@ -26,24 +34,24 @@ const Footer = () => {
       }}
     >
       <Grid container spacing={4} justifyContent="center">
-        {/* Sol */}
+        {/* Navigation */}
         <Grid item xs={12} sm={6} md={3}>
           <Typography variant="h6" gutterBottom>
-            Hızlı Bağlantılar
+            Navigation
           </Typography>
           <Box>
-            {["/", "/about", "/services", "/contact"].map((path, index) => (
-              <Link to={path} key={index} style={linkStyle}>
-                {linkLabels[index]}
+            {navLinks.map(({ label, to }) => (
+              <Link key={to} to={to} style={linkStyle}>
+                {label}
               </Link>
             ))}
           </Box>
         </Grid>
 
-        {/* Orta */}
+        {/* Social */}
         <Grid item xs={12} sm={6} md={3}>
           <Typography variant="h6" gutterBottom>
-            Bizi Takip Edin
+            Follow Us
           </Typography>
           <Box>
             {socialLinks.map((social, i) => (
@@ -60,10 +68,10 @@ const Footer = () => {
           </Box>
         </Grid>
 
-        {/* Sağ */}
+        {/* Contact */}
         <Grid item xs={12} sm={6} md={3}>
           <Typography variant="h6" gutterBottom>
-            İletişim
+            Contact
           </Typography>
           <Box>
             <Typography variant="body2" sx={{ mb: 1 }}>
@@ -73,34 +81,21 @@ const Footer = () => {
               <strong>Phone:</strong> +1 234 567 890
             </Typography>
             <Typography variant="body2">
-              <strong>Address:</strong> 1234 Some St, Some City, Some Country
+              <strong>Address:</strong> 1234 Some St, Some City, Country
             </Typography>
           </Box>
         </Grid>
       </Grid>
 
-      {/* Alt */}
+      {/* Bottom */}
       <Box sx={{ mt: 4 }}>
-        <Typography
-          variant="body2"
-          align="center"
-          sx={{ color: "#aaa" }}
-        >
+        <Typography variant="body2" align="center" sx={{ color: "#aaa" }}>
           &copy; {new Date().getFullYear()} KOU Bazaar. All Rights Reserved.
         </Typography>
       </Box>
     </Box>
   );
 };
-
-const linkLabels = ["Home", "About Us", "Services", "Contact Us"];
-
-const socialLinks = [
-  { icon: <Facebook />, href: "https://facebook.com" },
-  { icon: <Twitter />, href: "https://twitter.com" },
-  { icon: <Instagram />, href: "https://instagram.com" },
-  { icon: <LinkedIn />, href: "https://linkedin.com" },
-];
 
 const linkStyle = {
   color: "white",
@@ -109,7 +104,7 @@ const linkStyle = {
   marginBottom: "8px",
   fontSize: "0.9rem",
   transition: "color 0.3s",
-  ":hover": {
+  "&:hover": {
     color: "#1a73e8",
   },
 };

@@ -1,67 +1,73 @@
+// src/pages/home/Home.jsx
 import React, { useState, useEffect } from "react";
-import { Container, Typography, Box, Grid } from "@mui/material";
+import { Container, Box, Typography } from "@mui/material";
 import { getUserInfo } from "../../utils/authService";
-import ProductList from "../productList/ProductList";
 import PromoBanner from "../../component/promoBanner/PromoBanner";
-import ProductOfTheDay from "../../component/productOfTheDay/ProductOfTheDay";
+import HeroCarousel from "../../component/heroCarousel/HeroCarousel";
+import ProductList from "../productList/ProductList";
+import {
+  getProductsByCategoryId,
+  getProducts,
+} from "../../api/ProductApiServices";
 
-
-const Home = () => {
+const Home = ({ selectedCategoryId, onCategorySelect }) => {
   const user = getUserInfo();
   const [products, setProducts] = useState([]);
 
+  // Seçili kategoriye göre veya tüm ürünler
   useEffect(() => {
-    const stored = localStorage.getItem("allProducts");
-    if (stored) setProducts(JSON.parse(stored));
-  }, []);
+    (async () => {
+      try {
+        const data = selectedCategoryId
+          ? await getProductsByCategoryId(selectedCategoryId)
+          : await getProducts();
+        setProducts(data);
+      } catch {
+        setProducts([]);
+      }
+    })();
+  }, [selectedCategoryId]);
 
   return (
-    <Container maxWidth="xl" sx={{ mt: 2, px: 4 }}>
-      <Box sx={{ backgroundColor: "#f4f6f8", p: 3, borderRadius: 3 }}>
+    <Container maxWidth="xl" sx={{ mt: 12, px: 3 }}>
+      {/* {user?.role === "User" && (
+        <Typography
+          align="center"
+          sx={{
+            color: "primary.main",
+            fontWeight: "600",
+            my: 3,
+            fontSize: { xs: "1rem", sm: "1.2rem" },
+          }}
+        >
+          🎉 Ürünleri keşfetmeye başlayabilirsiniz
+        </Typography>
+      )}
 
-   
-        
+      {user?.role && user.role !== "User" && (
+        <Typography
+          align="center"
+          sx={{
+            fontWeight: "700",
+            mb: 4,
+            color:
+              user.role === "Admin"
+                ? "success.main"
+                : user.role === "Saler"
+                ? "warning.main"
+                : "primary.main",
+            fontSize: { xs: "1.1rem", sm: "1.3rem" },
+          }}
+        >
+          {user.role === "Admin" &&
+            "Admin olarak giriş yaptınız. Yönetim yetkileriniz aktif."}
+          {user.role === "Saler" && "Satıcı paneline hoş geldiniz!"}
+        </Typography>
+      )} */}
+      <PromoBanner />
+      <HeroCarousel onCategorySelect={onCategorySelect} />
 
-        {/* Rol bazlı mesaj */}
-        {user?.role && (
-          <Typography
-            align="center"
-            sx={{
-              fontWeight: "bold",
-              my: 3,
-              color:
-                user.role === "Admin"
-                  ? "green"
-                  : user.role === "Saler"
-                  ? "orange"
-                  : "blue",
-            }}
-          >
-            {user.role === "Admin" && "Admin olarak giriş yaptınız. Yönetim yetkileriniz aktif."}
-            {user.role === "Saler" && "Satıcı paneline hoş geldiniz!"}
-            {user.role === "User" && "Ürünleri keşfetmeye başlayabilirsiniz 🎉"}
-          </Typography>
-        )}
-
-        {/* 🟪 Kampanya & Günün Ürünü */}
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
-            <PromoBanner />
-          
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <ProductOfTheDay products={products} />
-          </Grid>
-        </Grid>
-
-
-        {/* 📦 Ürün listesi */}
-        <Box sx={{ mt: 5 }}>
-          <ProductList setAllProducts={setProducts} />
-        </Box>
-
-  
-      </Box>
+      <ProductList products={products} />
     </Container>
   );
 };

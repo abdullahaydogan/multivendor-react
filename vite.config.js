@@ -5,13 +5,6 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    proxy: {
-      // Bu, frontend'deki tüm "/api" isteklerini backend API'ye yönlendirecek
-      '/api': {
-        target: 'https://localhost:7079', // Backend API URL
-        changeOrigin: true, // CORS'u atlamak için gerekli
-        secure: false, // Https kullanıyorsanız ve SSL sertifikası sorunları varsa
-      },
-    },
+   port: 3000, // Vite server port
   },
 })

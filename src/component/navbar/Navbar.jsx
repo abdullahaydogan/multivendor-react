@@ -17,7 +17,6 @@ import TranslateIcon from "@mui/icons-material/Translate";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useNavigate } from "react-router-dom";
 import { getUserInfo } from "../../utils/authService";
-import logo from "../../assets/projeLogo2.png";
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -58,10 +57,7 @@ const Navbar = () => {
       <Toolbar sx={{ justifyContent: "space-between", flexWrap: "wrap" }}>
         {" "}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <img src={logo} alt="logo" height="35" />
-          <Typography variant="h6" sx={{ fontWeight: "bold", ml: 1 }}>
-            KOU Bazaar
-          </Typography>
+          
         </Box>
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <IconButton onClick={() => navigate("/cartpage")}>

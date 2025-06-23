@@ -1,12 +1,10 @@
-// src/pages/SignUp.jsx
 import React, { useState } from "react";
-import { signUp } from "./SignUpApiServices";
+import { signUp } from "../../api/SignUpApiServices";
 import {
   Container, TextField, Button, Typography, Box, Link, Alert,
   Grid, ThemeProvider, createTheme, Select, MenuItem, InputLabel, FormControl
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { AccountCircle, Email, Lock } from "@mui/icons-material";
 import { Link as RouterLink } from "react-router-dom";
 
 const theme = createTheme({
@@ -72,7 +70,7 @@ const SignUp = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container maxWidth="sm" sx={{ mt: 4, textAlign: "center" }}>
+      <Container maxWidth="sm" sx={{ mt: 4, textAlign: "center",marginTop: "64px" }}>
         <Typography variant="h4" sx={{ color: "primary.main", fontWeight: "bold" }}>
           Create Account
         </Typography>

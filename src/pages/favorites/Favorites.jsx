@@ -102,9 +102,10 @@ const Favorites = () => {
                   <Price variant="body2">
                     ${product.price.toFixed(2)}
                   </Price>
-                  <Category variant="body2">
-                    <strong>Category:</strong> {product.category}
-                  </Category>
+                 <Typography variant="body2" color="text.secondary">
+  <strong>Category:</strong> {typeof product.category === "object" ? product.category.name : product.category}
+</Typography>
+
                 </CardContent>
                 <RemoveButton onClick={() => handleRemoveFromFavorites(product.id)} fullWidth>
                   Remove from Favorites

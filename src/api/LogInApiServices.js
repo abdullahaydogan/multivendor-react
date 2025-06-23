@@ -1,17 +1,15 @@
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance";
 
-// API Base URL
-const API_BASE_URL = "https://localhost:7079/api/authentication/login";
+const API_BASE_URL = "/authentication";
 
-// loginUser function to handle login
 export const loginUser = async (username, password) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}`, {
+    const response = await axiosInstance.post(`${API_BASE_URL}/login`, {
       username,
       password,
     });
     if (response.data && response.data.token) {
-      return response.data; // Assuming the response contains the token and user info
+      return response.data;
     } else {
       throw new Error("Token not found in response");
     }
